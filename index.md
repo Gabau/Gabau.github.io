@@ -6,8 +6,6 @@ layout: home
 ---
 
 
-# Hello world
-
 # Projects
 
  1. [cs2103T iP](https://gabau.github.io/ip)
