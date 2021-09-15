@@ -10,7 +10,7 @@ permalink: /
 
 Hello there!
 
-# Projects
+## Projects
 
  1. [cs2103T iP](https://gabau.github.io/ip)
 
