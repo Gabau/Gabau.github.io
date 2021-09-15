@@ -10,6 +10,6 @@ layout: home
 
 # Projects
 
- 1. [cs2103T iP](gabau.github.io/ip)
+ 1. [cs2103T iP](https://gabau.github.io/ip)
 
 
