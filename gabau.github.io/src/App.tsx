@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
+import { createHashRouter, Outlet, RouterProvider } from 'react-router-dom'
 import ThemeContext from './context/ThemeContext'
 import Root from './pages/Root';
 import Contact from './pages/Contact';
@@ -21,7 +21,7 @@ const NavBarWrapper = () => {
 function App() {
   const [theme, setTheme] = useState<Theme>("light");
   
-  const router = createBrowserRouter([
+  const router = createHashRouter([
     {
       path: "/",
       element: <NavBarWrapper />,
