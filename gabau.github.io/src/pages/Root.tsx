@@ -8,7 +8,7 @@ export default function Root() {
             Gabau
         </h1>
         <div className="flex flex-row items-center justify-center">
-        <CodeBlock className="w-1/2 border-separate overflow-clip rounded-2xl" code='cout << "Hello world" << endl' language={"cpp"}/>
+        <CodeBlock className="text-left w-1/2 border-separate overflow-clip rounded-2xl" code='#include <iostream>\nusing namespace std;\nint main()\n{\n    cout << "Hello world" << endl \n}' language={"cpp"}/>
         </div>
     </div>
 }

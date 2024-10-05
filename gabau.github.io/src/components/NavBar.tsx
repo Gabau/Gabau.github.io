@@ -1,10 +1,7 @@
-// src/components/Navbar.js
-import { useContext } from 'react';
-import ThemeContext from '../context/ThemeContext';
 import { Link } from 'react-router-dom';
+import MoonSunToggle from './MoonSunToggle';
 
 const Navbar = () => {
-  const {theme, setTheme} = useContext(ThemeContext);
   return (
     <nav className="bg-gray-200 dark:bg-gray-800 p-4 flex justify-between items-center sticky md:h-14 xl:h-14 sm:h-10 w-full top-0">
       <ul className="flex space-x-6">
@@ -32,7 +29,7 @@ const Navbar = () => {
         
 
       </ul>
-      <button
+      {/* <button
         className="text-black dark:text-white bg-transparent border-none cursor-pointer"
         onClick={() => {
             if (theme === 'light') {
@@ -43,7 +40,8 @@ const Navbar = () => {
         }}
       >
         {theme === 'light' ? 'Switch to Dark' : 'Switch to Light'}
-      </button>
+      </button> */}
+      <MoonSunToggle />
     </nav>
   );
 };
