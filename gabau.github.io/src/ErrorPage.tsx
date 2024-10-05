@@ -6,8 +6,9 @@ export default function ErrorPage() {
         <Navbar />
         <div className="h-full w-full flex-col items-center">
             <h1>
-        404 Error missing page
+        404 Error
         </h1>
+        <p>Page does not exist</p>
         </div>
     </>
 }

@@ -7,6 +7,7 @@ import Contact from './pages/Contact';
 import ErrorPage from './ErrorPage';
 import Navbar from './components/NavBar';
 import Projects from './pages/Projects';
+import About from './pages/About';
 
 const NavBarWrapper = () => {
   return <>
@@ -38,6 +39,10 @@ function App() {
         {
           path: "/projects",
           element: <Projects />
+        }, 
+        {
+          path: '/about',
+          element: <About />
         }
       ]
     }
