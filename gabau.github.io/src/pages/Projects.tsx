@@ -4,7 +4,7 @@ import BearLogo from '../assets/bear.svg';
 
 const ProjectCard = ({ title, img, link  }: { title: string, img?: string, description?: string, link: string }) => {
     return <li key={title} className="md:w-1/2 lg:w-1/3 h-32 dark:bg-slate-950 bg-slate-500 flex flex-col p-4 rounded-md shadow-sm">
-        <Link to={link} >
+        <Link reloadDocument to={link} >
             <div className="flex flex-row">
                 <div className="flex flex-col">
                     {img && <img src={img} width={64} height={64}></img>}
