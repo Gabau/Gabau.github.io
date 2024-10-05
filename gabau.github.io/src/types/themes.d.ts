@@ -1,0 +1,2 @@
+
+type Theme = "light" | "dark";
