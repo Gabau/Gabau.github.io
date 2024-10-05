@@ -18,9 +18,15 @@ const NavBarWrapper = () => {
   </>
 };
 
+function checkPreference(): Theme {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return "dark";  // dark mode
+  }
+  return "light";
+}
 
 function App() {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(checkPreference());
   
   const router = createHashRouter([
     {
