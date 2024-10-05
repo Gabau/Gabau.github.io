@@ -1,17 +1,16 @@
-name: github pages
+name: "github pages"
 
 on:
   push:
-    branches:
-      - master
+    branches: ["master", "react-switch"]
 jobs:
   deploy:
-    uns-on: ubuntu-18.04
-        steps:
+    runs-on: ubuntu-18.04
+    steps:
         - uses: actions/checkout@v2
         - name: Setup Node
-            uses: actions/setup-node@v2-beta
-            with:
+          uses: actions/setup-node@v2-beta
+          with:
             node-version: '12'
             working-directory: "./gabau.github.io"
         - name: Get npm cache directory
