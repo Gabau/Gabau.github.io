@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 export default function TypeWriterHeader({ title, timeout, cursorTimeout , className }: { title: string, timeout: number, cursorTimeout?: number, className?: string }) {
   // not ideal but looks ok
-  const [typedTitle, setTitle] = useState(title[0]);
+  const [typedTitle, setTitle] = useState("");
   const [cursor, setCursor] = useState("");
   useEffect(() => {
     if (title === typedTitle) {
@@ -19,7 +19,7 @@ export default function TypeWriterHeader({ title, timeout, cursorTimeout , class
     setTimeout(() => setCursor(cursor === " " ? "|" : " "), cursorTimeout ? cursorTimeout : 300);
   }, [cursor, title, typedTitle, cursorTimeout]);
   return (
-    <h1 className={`${className}`} >{typedTitle}<span className="absolute">{cursor}</span></h1>
+    <h1 className={`${className}`} >{typedTitle === "" && <>&nbsp;</>}{typedTitle}<span className="absolute">{cursor}</span></h1>
   )
 
 }
