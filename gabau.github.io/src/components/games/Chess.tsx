@@ -26,8 +26,10 @@ function getChessPiecePosition(w: number, h: number, chess_piece: ChessPiece) {
 
 class ChessGameState {
   pieces: ChessPiece[];
+  current_player: "white" | "black";
   constructor() {
     this.pieces = [];
+    this.current_player = "white";
     // initialise the 8 pawns a side
     for (let i = 0; i < 8; ++i) {
       this.pieces.push({
@@ -115,14 +117,15 @@ class ChessGameState {
   }
 };
 
-function ChessPieceSprite({ piece, dragEnd }: { piece: ChessPiece, dragEnd?: (x: number, y: number, sprite: any) => void }) {
+function ChessPieceSprite({ piece, dragStart, dragEnd }: { piece: ChessPiece, dragStart?: (sprite: any) => void, dragEnd?: (x: number, y: number, sprite: any) => void }) {
   const v = piece;
-  const baseUrl = "https://gabau.github.io/";
+  const baseUrl = "https://gabau.github.io";
   const onDragStart = (event: any) => {
     const sprite = event.currentTarget as any;
     sprite.alpha = 0.5;
     sprite.data = event.data;
     sprite.dragging = true;
+    if (dragStart) dragStart(sprite);
   };
 
   const onDragEnd = (event: any) => {
@@ -142,6 +145,7 @@ function ChessPieceSprite({ piece, dragEnd }: { piece: ChessPiece, dragEnd?: (x:
   const onDragMove = (event: any) => {
     const sprite = event.currentTarget as any;
     if (sprite.dragging) {
+      console.log("aaaa");
       const newPosition = sprite.data!.getLocalPosition(sprite.parent);
       sprite.x = newPosition.x;
       sprite.y = newPosition.y;
@@ -165,7 +169,6 @@ function ChessPieceSprite({ piece, dragEnd }: { piece: ChessPiece, dragEnd?: (x:
 const Chess = () => {
 
   const [gameState] = useState(new ChessGameState());
-  
   const draw = useCallback((g: Graphics) => {
     g.clear();
     const color1 = 0xe0cccc;
@@ -184,10 +187,11 @@ const Chess = () => {
 
   }, []);
   return (
-    <Stage width={600} height={600} options={{ background: 0x1099bb }}>
+    <Stage width={600} height={600} options={{ background: 0x1099bb }}
+    >
       <GraphicComponent draw={draw} />
       {gameState.pieces.filter((v) => v.status !== "dead").map(v => {
-        return <ChessPieceSprite key={v.x * 8 + v.y} piece={v} />
+        return <ChessPieceSprite  key={v.x * 8 + v.y} piece={v} />
       })}
       {/* <Sprite image={bunnyUrl} x={300} y={150} />
       <Sprite image={bunnyUrl} x={500} y={150} />
