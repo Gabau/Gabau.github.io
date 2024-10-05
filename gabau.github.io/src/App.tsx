@@ -8,6 +8,7 @@ import ErrorPage from './ErrorPage';
 import Navbar from './components/NavBar';
 import Projects from './pages/Projects';
 import About from './pages/About';
+import Chess from './components/games/Chess';
 
 const NavBarWrapper = () => {
   return <>
@@ -49,6 +50,10 @@ function App() {
         {
           path: '/about',
           element: <About />
+        },
+        {
+          path: '/chess',
+          element: <Chess />
         }
       ]
     }
