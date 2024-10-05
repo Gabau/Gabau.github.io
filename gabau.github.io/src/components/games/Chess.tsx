@@ -117,7 +117,7 @@ class ChessGameState {
 
 function ChessPieceSprite({ piece, dragEnd }: { piece: ChessPiece, dragEnd?: (x: number, y: number, sprite: any) => void }) {
   const v = piece;
-  const baseUrl = "https://gabau.github.com/";
+  const baseUrl = "https://gabau.github.io/";
   const onDragStart = (event: any) => {
     const sprite = event.currentTarget as any;
     sprite.alpha = 0.5;
