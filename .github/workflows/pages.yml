@@ -1,0 +1,54 @@
+name: "github pages"
+
+on:
+  push:
+    branches: ["master", "react-switch"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+        - name: Setup Node
+          uses: actions/setup-node@v2-beta
+          with:
+            node-version: '22'
+        - name: Get npm cache directory
+          id: npm-cache
+          run: |
+            echo "::set-output name=dir::$(npm config get cache)"
+          
+          working-directory: "./gabau.github.io"
+        - uses: actions/cache@v4
+          with:
+            path: ${{ steps.npm-cache.outputs.dir }}
+            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              ${{ runner.os }}-node-
+        - name: Grab dependencies
+          run: npm install && npm run build
+          working-directory: "./gabau.github.io"
+        - uses: actions/upload-pages-artifact@v3
+          with:
+            name: github-pages
+            path: "./gabau.github.io/dist/"
+    # Deploy job
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
