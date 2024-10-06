@@ -165,13 +165,19 @@ export default function Terminal(
       }
       if (char.key === '\r') {
         terminal.cursor_location = 0;
+        terminal.history_counter = 0;
         prompt();
         
       } else {
         
         terminalObject.write(char.key);
+        
+        if (terminal.cursor_location < terminal.current_prompt.length) {
+          terminal.current_prompt = terminal.current_prompt.substring(0, terminal.cursor_location) + char.key + terminal.current_prompt.substring(terminal.cursor_location + 1);
+        } else {
+          terminal.current_prompt += char.key;
+        }
         terminal.cursor_location += 1;
-        terminal.current_prompt += char.key;
       }
     });
     setDisposableOnKey(item);
