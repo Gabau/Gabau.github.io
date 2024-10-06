@@ -71,7 +71,7 @@ export default function FuzzyText({
 
   return (
     <div className="flex flex-row items-center justify-center">
-      <h1 ref={element} className={`p-10 font-extrabold ${className ?? ''} fuzzy-h1 dark:selection:bg-black selection:bg-gray-500`}>
+      <h1 ref={element} className={`p-10 font-extrabold ${className ?? ''} fuzzy-h1`}>
         {text}
       </h1>
       <svg className="distort absolute top-32 w-0 h-0 pointer-events-none">
