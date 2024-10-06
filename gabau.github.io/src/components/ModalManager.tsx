@@ -124,7 +124,8 @@ const TextEditor = ({ file }: { file?: VirtualFile }) => {
         }}
         value={data}
       ></textarea>
-      <pre onScroll={(e) => {
+      <pre 
+      onScroll={(e) => {
         setScroll((e.target as HTMLPreElement).scrollTop);
       }} ref={preRef} className="text-left h-1/2 p-3 overflow-auto">
         <code className="language-cpp" ref={codeRef}></code>

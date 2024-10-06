@@ -1,0 +1,4 @@
+
+.fuzzy-h1 {
+    filter: url(#distortionFilter);
+}
