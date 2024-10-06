@@ -8,6 +8,7 @@ import PlayGround from './pages/Playground';
 import NavBarWrapper from "./components/NavBarWrapper";
 import Terminal from "./components/Terminal";
 import TypeWriterHeader from "./components/TypeWriterHeader";
+import APage from "./pages/fun/APage";
 
 
 
@@ -51,6 +52,28 @@ const routes = [
             <Terminal />
           </div>
         )
+      },
+      {
+        path: 'play/apage',
+        element: <APage values={[
+          "We're no strangers",
+          "to love",
+          "you know the rules",
+          "and so do I",
+          "A full commitment's",
+          "what i'm thinking of",
+          "You wouldn't get this",
+          "from any other guy",
+          "I just wanna tell you",
+          "How I'm feeling",
+          "Gotta make you understand",
+          "Chorus :)",
+          "Never gonna give you up",
+          "Never gonna let you down",
+          "Never gonna run around and desert you",
+          "Never gonna say goodbye",
+          "Never gonna tell a lie and hurt you"
+        ]} />
       }
     ]
   }

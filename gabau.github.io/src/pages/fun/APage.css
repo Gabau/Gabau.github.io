@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:900&display=swap");
+
+#APage-container {
+    @apply flex flex-row items-center;
+    filter: url(#APage-threshold) blur(0.6px);
+}
+
+#APage-text2 {
+    opacity: 0;
+}
+
+#APage-text1,
+#APage-text2 {
+    position: absolute;
+    width: 100%;
+    display: inline-block;
+    top: 20px;
+    font-family: "Raleway", sans-serif;
+    font-size: 80pt;
+
+    text-align: center;
+
+    user-select: none;
+}

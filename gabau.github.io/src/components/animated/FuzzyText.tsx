@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useRef } from "react";
 import './FuzzyText.css';
 
+// Inspired from https://codepen.io/Sidstumple/pen/RwGJOow
 export default function FuzzyText({
   text,
   className,
