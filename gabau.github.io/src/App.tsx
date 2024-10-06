@@ -7,13 +7,21 @@ import ModalContext from './context/ModalContext';
 import ModalManager from './components/ModalManager';
 
 
-
+const themeKey = "gabau-theme";
 function checkPreference(): Theme {
+  const storedTheme = localStorage.getItem(themeKey);
+  if (storedTheme === 'light' || storedTheme === 'dark') {
+    return storedTheme;
+  }
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    localStorage.setItem(themeKey, "dark");
     return "dark";  // dark mode
   }
+  
+  localStorage.setItem(themeKey, "light");
   return "light";
 }
+
 
 function App() {
   const [theme, setTheme] = useState<Theme>(checkPreference());
@@ -38,7 +46,10 @@ function App() {
       if (b) setModalProps(b);
     }}}>
       <ModalManager />
-      <ThemeContext.Provider value={{theme, setTheme}}>
+      <ThemeContext.Provider value={{theme, setTheme: (v) => {
+        setTheme(v);
+        localStorage.setItem(themeKey, v);
+      }}}>
         <RouterProvider router={router} />
       </ThemeContext.Provider>
       </ModalContext.Provider>
