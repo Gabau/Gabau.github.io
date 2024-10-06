@@ -24,7 +24,7 @@ const ProjectCard = ({ title, img, description, link  }: { title: string, img?: 
 
 export default function Projects() {
     return <>
-        <TypeWriterHeader className="p-10" title="Projects" timeout={1000} />
+        <TypeWriterHeader className="p-10" title="Projects" timeout={300} />
         <ul className="items-center flex flex-col p-8">
             <ProjectCard title="Peerprep" description="Monolithic web application using t3 stack" link="https://github.com/CS3219-AY2324S1/ay2324s1-course-assessment-g39" />
             <ProjectCard title="Sariel" description="Simple Java GUI application" link="https://gabau.github.io/ip/" />
