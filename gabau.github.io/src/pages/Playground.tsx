@@ -36,7 +36,7 @@ export default function PlayGround() {
       <p>For the miscellaneous stuff</p>
       <div className="flex flex-wrap flex-row h-full w-full justify-center">
         {playgrounds.map((v) => {
-          return <PlayGroundCard title={v.title} description={v.description} link={v.link}  />
+          return <PlayGroundCard key={v.title} title={v.title} description={v.description} link={v.link}  />
         })}
       </div>
     </>

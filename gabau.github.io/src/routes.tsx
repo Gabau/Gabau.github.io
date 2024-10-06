@@ -7,6 +7,7 @@ import Chess from './components/games/Chess';
 import PlayGround from './pages/Playground';
 import NavBarWrapper from "./components/NavBarWrapper";
 import Terminal from "./components/Terminal";
+import TypeWriterHeader from "./components/TypeWriterHeader";
 
 
 
@@ -43,7 +44,13 @@ const routes = [
       },
       {
         path: '/play/terminal',
-        element: <Terminal />
+        element: (
+          <div>
+            <TypeWriterHeader title="Terminal" timeout={300} className="p-10" />
+            <p>Basic unix-like terminal. No persistant storage</p>
+            <Terminal />
+          </div>
+        )
       }
     ]
   }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { IDisposable, Terminal as TerminalObject } from "@xterm/xterm";
+import { Terminal as TerminalObject } from "@xterm/xterm";
 import '@xterm/xterm/css/xterm.css';
+import useModals from "../hooks/useModals";
 
 const TERMINAL_RED = '\x1B[31m';
 const TERMINAL_NORMAL = '\x1B[0m';
@@ -11,7 +12,9 @@ const rightKey = '\x1B[C';
 const upKey = '\x1B[A';
 const downKey = '\x1B[B';
 const hideCursor = '\x1b[?25l';
-const showCursor = '\x1b[?25h'
+const showCursor = '\x1b[?25h';
+
+
 class TerminalState {
   // history of data
   history: string[];
@@ -20,6 +23,11 @@ class TerminalState {
   history_counter: number;
   current_prompt: string;
   cursor_location: number;
+  root_dir: VirtualFile;
+  current_dir: number;
+  file_map: Map<number, VirtualFile>;
+  max_file_id: number;
+  open_file: (file: VirtualFile) => void;
   constructor() {
     this.history = [];
     this.prompt = (dir) => {
@@ -29,6 +37,19 @@ class TerminalState {
     this.current_prompt = "";
     this.history_counter = 0;
     this.cursor_location = 0;
+    this.root_dir = {
+      parent: -1,
+      id: -1,
+      children: new Map<string, VirtualFile>(),
+      name: "root",
+      data: "",
+      fileType: "directory"
+    };
+    this.file_map = new Map<number, VirtualFile>();
+    this.file_map.set(-1, this.root_dir);
+    this.current_dir = -1;
+    this.max_file_id = 0;
+    this.open_file = () => {};
   }
 
   onUpKey() { 
@@ -45,7 +66,152 @@ class TerminalState {
     return result;
   }
 
+  MkDir(flags: string[], terminal: TerminalObject) {
+    if (flags.length <= 1) {
+      terminal.write('\n\r');
+      terminal.write('Insufficient arguments for mkdir');
+      return;
+    }
+    const toCreate = flags[1].split("/");
+    
+    let current_dir = this.current_dir;
+    if (flags[1].startsWith("/")) {
+      current_dir = this.root_dir.id;
+    }
+
+    toCreate.forEach((dir) => {
+      this.file_map.get(current_dir)?.children.set(dir, {
+        parent: current_dir,
+        id: this.max_file_id,
+        children: new Map<string, VirtualFile>(),
+        data: "",
+        name: dir,
+        fileType: "directory"
+      });
+      const v = this.file_map.get(current_dir)?.children.get(dir);
+      if (v) {
+        // update the file map
+        this.file_map.set(this.max_file_id, 
+          v);
+      }
+      
+      current_dir = this.max_file_id;
+      this.max_file_id += 1;
+
+    })
+  }
+
+  // Open a file for writing
+  Open(flags: string[], terminal: TerminalObject) {
+    
+    if (flags.length <= 1) {
+      terminal.write('\n\r');
+      terminal.write('Insufficient arguments for cd');
+      return;
+    }
+    const target_dir = flags[1];
+    let current_dir = this.current_dir;
+    if (target_dir.startsWith('/')) {
+      // absolute path
+      current_dir = this.root_dir.id;
+    }
+    const m = target_dir.split("/");
+    for (let i = 0; i < m.length; ++i) {
+      // move up
+      if (m[i] === '..') {
+        current_dir = this.file_map.get(current_dir)?.parent ?? current_dir;
+        continue;
+      }
+      const tmp = this.file_map.get(current_dir)?.children.get(m[i].trim())?.id;
+      if (tmp !== undefined) {
+        current_dir = tmp;
+      }
+    }
+    const v = this.file_map.get(current_dir);
+    if (v) this.open_file(v);
+  }
+
+  Cd(flags: string[], terminal: TerminalObject) {
+    if (flags.length <= 1) {
+      terminal.write('\n\r');
+      terminal.write('Insufficient arguments for open');
+      return;
+    }
+    const target_dir = flags[1];
+    let current_dir = this.current_dir;
+    if (target_dir.startsWith('/')) {
+      // absolute path
+      current_dir = this.root_dir.id;
+    }
+
+    
+    const m = target_dir.split("/");
+    for (let i = 0; i < m.length; ++i) {
+      // move up
+      if (m[i] === '..') {
+        current_dir = this.file_map.get(current_dir)?.parent ?? current_dir;
+        continue;
+      }
+      const tmp = this.file_map.get(current_dir)?.children.get(m[i].trim())?.id;
+      if (tmp !== undefined) {
+        current_dir = tmp;
+      }
+    }
+    this.current_dir = current_dir;
+    
+
+  }
+
+  Help(terminal: TerminalObject) {
+    terminal.write(`\n\rSimple unix-like terminal with basic commands
+      \r\tls List the current directory
+      \r\tcd Change directories [target directory]
+      \r\tmkdir Make a directory
+      \r\topen Opens a directory for writing
+      \r\tMore to come`);
+  }
+
+  Ls(_: string[], terminal: TerminalObject) {
+    const current_dir = this.file_map.get(this.current_dir);
+    if (current_dir) {
+    
+      for (const [name, file] of current_dir.children.entries()) {
+        if (file.fileType === 'directory') {
+          terminal.write(`\n\r${TERMINAL_GREEN}${name}${TERMINAL_NORMAL}`);
+        } else {
+          terminal.write('\n\r${name}');
+        }
+      }
+    }
+  }
+
   onEnter(val: string, terminal: TerminalObject) {
+    const tokens = val.split(" ").map((v) => v.trim());
+    if (tokens.length !== 0) {
+
+      switch (tokens[0]) {
+        case 'mkdir':
+          // create a directory
+          this.MkDir(tokens, terminal);
+          break;
+        case 'cd':
+          this.Cd(tokens, terminal);
+          break;
+        case 'ls':
+          this.Ls(tokens, terminal);
+          break;
+        case 'help':
+          this.Help(terminal);
+          break;
+        case 'open':
+          this.Open(tokens, terminal);
+          break;
+
+      }
+  
+    }
+
+
     if (val === 'clear') {
       terminal.clear();
       terminal.write(hideCursor);
@@ -94,7 +260,7 @@ export default function Terminal(
   const [terminal] = useState(new TerminalState());
   const [id] = useState(makeid(10));
   const [terminalObject] = useState(new TerminalObject());
-  const [stopListening, setDisposableOnKey] = useState<IDisposable | null>(null);
+  const { setModalType } = useModals();
 
   function prompt() {
 
@@ -102,13 +268,17 @@ export default function Terminal(
   }
 
   useEffect(() => {
-    if (stopListening != null) {
-      stopListening.dispose();
-    }
-    const item = terminalObject.onKey(key => {
+    
+    if (terminal.loaded) return;
+    terminal.open_file = (f) => {
+      setModalType("editor", { virt_file: f });
+    };
+    terminal.setLoaded();
+    terminalObject.open(document.getElementById(id)!);
+    terminalObject.clear();
+    terminalObject.write(terminal.prompt(""));
+    terminalObject.onKey(key => {
       const char = key;
-      // console.log(key);
-      // console.log(char.key === "");
       if (char.key === upKey) {
         // clear current buffer and write the up key
         
@@ -180,13 +350,6 @@ export default function Terminal(
         terminal.cursor_location += 1;
       }
     });
-    setDisposableOnKey(item);
-    if (terminal.loaded) return;
-    terminal.setLoaded();
-    terminalObject.open(document.getElementById(id)!);
-    terminalObject.clear();
-    terminalObject.write(terminal.prompt(""));
-
   }, [terminalObject, id, terminal]);
 
   return (
