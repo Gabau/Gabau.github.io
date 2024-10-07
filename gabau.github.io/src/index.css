@@ -13,5 +13,5 @@ body {
 }
 
 h1 {
-    @apply font-thin text-9xl;
+    @apply font-thin sm:text-9xl text-3xl;
 }
