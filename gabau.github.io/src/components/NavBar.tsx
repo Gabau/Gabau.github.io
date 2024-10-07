@@ -20,15 +20,15 @@ const NavDrawer = ({
     if (openDrawer) {
       gsap.to(drawerRef.current, { duration: 1, top: "0px" });
     } else {
-      gsap.to(drawerRef.current, { duration: 1, top: `-${heightWrapper}px` });
+        gsap.to(drawerRef.current, { duration: 1, top: `-${heightWrapper}px` });
     }
   }, [openDrawer]);
   return (
     <>
       <div
         ref={drawerRef}
-        style={{ height: heightWrapper }}
-        className={`flex bg-slate-300 flex-col justify-end absolute w-full top-[-${heightWrapper}px] dark:bg-slate-700 z-10`}
+        style={{ height: heightWrapper, top: -heightWrapper }}
+        className={`flex bg-slate-300 flex-col justify-end absolute w-full dark:bg-slate-700 z-10`}
       >
         <ul className="space-y-2 p-2">
           <li className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-400 cursor-pointer">
