@@ -71,7 +71,7 @@ export default function AnimatedSand({ width, height, background, sand_color }: 
       x,
       y,
       velocity_x: Math.random() * x_range * 2 - x_range,
-      velocity_y: Math.random() * 50
+      velocity_y: Math.random() * 50 + 20
     });
   };
   const forceRedraw = () => setRedraw(!redraw);
