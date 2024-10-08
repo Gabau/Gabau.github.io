@@ -40,6 +40,11 @@ const playgrounds = [
     description: "Just a page",
     link: "/play/apage",
   },
+  {
+    title: "Animated Sand",
+    description: "Simple sand falling in pixi.js",
+    link: "/play/sand"
+  }
 ];
 
 export default function PlayGround() {
