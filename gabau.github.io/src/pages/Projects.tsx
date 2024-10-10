@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 
-import BearLogo from '../assets/bear.svg';
 import TypeWriterHeader from "../components/TypeWriterHeader";
 
 const ProjectCard = ({ title, img, description, link  }: { title: string, img?: string, description?: string, link: string }) => {
@@ -9,7 +8,7 @@ const ProjectCard = ({ title, img, description, link  }: { title: string, img?: 
             <div className="flex flex-row">
                 <div className="flex flex-col w-2/12 overflow-auto text-center">
                     {img && <img src={img} width={64} height={64}></img>}
-                    {!img && <img src={BearLogo} width={64} height={64} />}
+                    {!img && <img src={'/logo.png'} width={64} height={64} />}
                     <div className="w-[64px] py-2 items-center justify-center">
                         {title}
                     </div>
