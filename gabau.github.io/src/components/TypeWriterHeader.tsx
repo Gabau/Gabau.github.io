@@ -38,7 +38,7 @@ export default function TypeWriterHeader({ title, timeout, cursorTimeout , class
     setCursor("|");
   }, [cursor, title, typedTitle, cursorTimeout]);
   return (
-    <h1 className={`${className}`} >{typedTitle === "" && <>&nbsp;</>}{typedTitle}<span className="absolute">{cursor}</span></h1>
+    <h1 className={`${className}`} >{typedTitle === "" && <>&nbsp;</>}{typedTitle}<span>{cursor}</span></h1>
   )
 
 }
