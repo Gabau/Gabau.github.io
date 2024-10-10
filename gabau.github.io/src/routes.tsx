@@ -9,6 +9,7 @@ import NavBarWrapper from "./components/NavBarWrapper";
 import Terminal from "./components/Terminal";
 import TypeWriterHeader from "./components/TypeWriterHeader";
 import APage from "./pages/fun/APage";
+import RepeatingBannerPage from "./pages/fun/RepeatingBannerPage";
 
 
 
@@ -74,6 +75,10 @@ const routes = [
           "Never gonna say goodbye",
           "Never gonna tell a lie and hurt you"
         ]} />
+      },
+      {
+        path: '/play/rotating',
+        element: <RepeatingBannerPage />
       }
     ]
   }

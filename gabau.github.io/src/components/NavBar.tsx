@@ -21,18 +21,6 @@ const Navbar = () => {
           <Link to="/playground">Playground</Link>
         </li>
       </ul>
-      {/* <button
-        className="text-black dark:text-white bg-transparent border-none cursor-pointer"
-        onClick={() => {
-            if (theme === 'light') {
-                setTheme('dark');
-            } else {
-                setTheme('light');
-            }
-        }}
-      >
-        {theme === 'light' ? 'Switch to Dark' : 'Switch to Light'}
-      </button> */}
       <MoonSunToggle />
     </nav>
   );

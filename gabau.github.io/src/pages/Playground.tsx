@@ -40,6 +40,11 @@ const playgrounds = [
     description: "Just a page",
     link: "/play/apage",
   },
+  {
+    title: 'Repeating text',
+    description: "Simple repeating animation",
+    link: "/play/rotating"
+  }
 ];
 
 export default function PlayGround() {
