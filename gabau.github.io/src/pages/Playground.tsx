@@ -41,9 +41,14 @@ const playgrounds = [
     link: "/play/apage",
   },
   {
+
     title: 'Repeating text',
     description: "Simple repeating animation",
-    link: "/play/rotating"
+    link: "/play/rotating",
+  },{
+    title: "Animated Sand",
+    description: "Simple sand falling in pixi.js",
+    link: "/play/sand"
   }
 ];
 

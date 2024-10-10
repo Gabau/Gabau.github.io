@@ -21,6 +21,7 @@ export default function APage({ values }: { values: string[] }) {
       const tl = gsap.timeline({
         repeat: -1,
         repeatDelay: coolDownTime,
+        delay: 2.0
       });
       tl.to(text1Ref.current, { duration: morphTime, opacity: 0.0, ease: "power2.out" });
       
@@ -31,7 +32,8 @@ export default function APage({ values }: { values: string[] }) {
 
       const blurTl = gsap.timeline({
         repeat: -1,
-        repeatDelay: coolDownTime
+        repeatDelay: coolDownTime,
+        delay: 2.0
       });
       blurTl.to(text1Ref.current, { duration: morphTime / 2, filter: 'blur(10px)' });
       blurTl.to(text1Ref.current, { duration: morphTime / 2, filter: 'blur(0px)' });
@@ -42,7 +44,8 @@ export default function APage({ values }: { values: string[] }) {
   useGSAP(() => {
     const tl = gsap.timeline({
       repeat: -1,
-      repeatDelay: coolDownTime
+      repeatDelay: coolDownTime,
+      delay: 2.0,
     });
     tl.to(text2Ref.current, { duration: morphTime, opacity: 1.0, ease: "power2.out"  });
     tl.to(text2Ref.current, { duration: morphTime, opacity: 0.0, ease: "power2.out", delay: coolDownTime  });
@@ -55,7 +58,8 @@ export default function APage({ values }: { values: string[] }) {
     
     const blurTl = gsap.timeline({
       repeat: -1,
-      repeatDelay: coolDownTime
+      repeatDelay: coolDownTime,
+      delay: 2.0
     });
     blurTl.to(text2Ref.current, { duration: morphTime / 2, filter: 'blur(10px)' });
     blurTl.to(text2Ref.current, { duration: morphTime / 2, filter: 'blur(0px)' });

@@ -5,7 +5,7 @@ const NavBarWrapper = () => {
   return (
     <>
       <Navbar />
-      <div className="w-full h-full">
+      <div className="w-full h-full overflow-auto">
         <Outlet />
       </div>
     </>
