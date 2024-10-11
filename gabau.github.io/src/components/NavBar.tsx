@@ -13,11 +13,11 @@ const RightItems = () => {
   const {theme} = useContext(ThemeContext);
 
   return (<div className="flex flex-row space-x-6">
-      <Link to="https://www.linkedin.com/in/gabriel-au-chen-xi-9a764b21b/" className="flex xl:h-10 sm:h-8">
+      <Link to="https://www.linkedin.com/in/gabriel-au-chen-xi-9a764b21b/" className="flex h-8">
         {theme === "light" && <FaLinkedin className="w-full h-full"/>}
         {theme === "dark" && <FaLinkedinIn className="w-full h-full" />}
       </Link>
-      <Link to="https://github.com/Gabau" className="flex xl:h-10 sm:h-8 ">
+      <Link to="https://github.com/Gabau" className="flex h-8">
         {theme === "light" && <img src={GithubIcon} className="object-contain w-auto h-auto" />}
         {theme === "dark" && <img src={LighGithubIcon} className="object-contain w-auto h-auto" />}
       </Link>
