@@ -48,7 +48,7 @@ const NavDrawer = ({
       <div
         ref={drawerRef}
         style={{ height: heightWrapper, top: -heightWrapper }}
-        className={`flex bg-slate-300 flex-col justify-end absolute w-full dark:bg-slate-700 z-10`}
+        className={`flex bg-slate-300 flex-col justify-end absolute w-full dark:bg-slate-700 z-20`}
       >
         <ul className="space-y-2 p-2">
           <li className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-400 cursor-pointer">
@@ -92,7 +92,7 @@ const Navbar = () => {
           openDrawer={expandMenu}
           onDrawerClose={() => setExpandMenu(false)}
         />
-        <nav className="bg-gray-200 z-10 dark:bg-gray-800 p-4 flex justify-between items-center sticky md:h-14 xl:h-14 sm:h-10 w-full top-0">
+        <nav className="bg-gray-200 z-20 dark:bg-gray-800 p-4 flex justify-between items-center sticky md:h-14 xl:h-14 sm:h-10 w-full top-0">
           <ul className="flex space-x-6">
             <button onClick={() => setExpandMenu(!expandMenu)}>
               <CiMenuBurger />
@@ -105,7 +105,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-gray-200 dark:bg-gray-800 p-4 flex justify-between items-center sticky md:h-14 xl:h-14 sm:h-10 w-full top-0">
+    <nav className="bg-gray-200 dark:bg-gray-800 p-4 flex justify-between items-center sticky md:h-14 xl:h-14 sm:h-10 w-full top-0 z-20">
       <ul className="flex space-x-6">
         <li className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-400 cursor-pointer">
           <Link to="/">Home</Link>
