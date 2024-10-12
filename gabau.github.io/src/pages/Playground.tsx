@@ -41,15 +41,20 @@ const playgrounds = [
     link: "/play/apage",
   },
   {
-
-    title: 'Repeating text',
+    title: "Repeating text",
     description: "Simple repeating animation",
     link: "/play/rotating",
-  },{
+  },
+  {
     title: "Animated Sand",
     description: "Simple sand falling in pixi.js",
-    link: "/play/sand"
-  }
+    link: "/play/sand",
+  },
+  {
+    title: "Pong",
+    description: "Pong game",
+    link: "/play/pong",
+  },
 ];
 
 export default function PlayGround() {
