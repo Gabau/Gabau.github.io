@@ -41,7 +41,7 @@ const SortVisualizer: React.FC<{
     }
     const w = width / values.length;
     
-    const gapWrapper = gap ? gap : 0.5 * w;
+    const gapWrapper = gap ? gap : 0.05 * w;
     for (let i = 0; i < values.length; ++i) {
       const perc = Math.round( (values[i] - min_val) / (max_val - min_val) * (height - m)) + m;
       g.beginFill(currColors.barColor);
