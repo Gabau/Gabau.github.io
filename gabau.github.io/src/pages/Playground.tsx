@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import TypeWriterHeader from "../components/TypeWriterHeader";
+import { playgroundRoutes } from "../routes/playground";
 
 const PlayGroundCard = ({
   title,
@@ -29,33 +30,6 @@ const PlayGroundCard = ({
 //   };
 // }
 
-const playgrounds = [
-  {
-    title: "Terminal",
-    description: "Simple terminal that runs in the browser",
-    link: "/play/terminal",
-  },
-  {
-    title: "A Page",
-    description: "Just a page",
-    link: "/play/apage",
-  },
-  {
-    title: "Repeating text",
-    description: "Simple repeating animation",
-    link: "/play/rotating",
-  },
-  {
-    title: "Animated Sand",
-    description: "Simple sand falling in pixi.js",
-    link: "/play/sand",
-  },
-  {
-    title: "Pong",
-    description: "Pong game",
-    link: "/play/pong",
-  },
-];
 
 export default function PlayGround() {
   return (
@@ -63,13 +37,13 @@ export default function PlayGround() {
       <TypeWriterHeader title="Playground" timeout={300} className="p-10" />
       <p>For the miscellaneous stuff</p>
       <div className="flex flex-wrap flex-row h-auto w-full justify-center">
-        {playgrounds.map((v) => {
+        {playgroundRoutes.map((v) => {
           return (
             <PlayGroundCard
               key={v.title}
               title={v.title}
               description={v.description}
-              link={v.link}
+              link={`/play/${v.path}`}
             />
           );
         })}

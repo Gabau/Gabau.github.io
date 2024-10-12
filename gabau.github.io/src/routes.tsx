@@ -6,12 +6,7 @@ import About from "./pages/About";
 import Chess from "./components/games/Chess";
 import PlayGround from "./pages/Playground";
 import NavBarWrapper from "./components/NavBarWrapper";
-import Terminal from "./components/Terminal";
-import TypeWriterHeader from "./components/TypeWriterHeader";
-import APage from "./pages/fun/APage";
-import RepeatingBannerPage from "./pages/fun/RepeatingBannerPage";
-import AnimatedSandPage from "./pages/fun/AnimatedSandPage";
-import PongPage from "./pages/fun/PongPage";
+import { playgroundRoutes } from "./routes/playground";
 
 const routes = [
   {
@@ -45,60 +40,7 @@ const routes = [
       },
       {
         path: "/play",
-        children: [
-          {
-            path: "terminal",
-            element: (
-              <div>
-                <TypeWriterHeader
-                  title="Terminal"
-                  timeout={300}
-                  className="p-10"
-                />
-                <p>Basic unix-like terminal. No persistant storage</p>
-                <Terminal />
-              </div>
-            ),
-          },
-          {
-            path: "apage",
-            element: (
-              <APage
-                values={[
-                  "We're no strangers",
-                  "to love",
-                  "you know the rules",
-                  "and so do I",
-                  "A full commitment's",
-                  "what i'm thinking of",
-                  "You wouldn't get this",
-                  "from any other guy",
-                  "I just wanna tell you",
-                  "How I'm feeling",
-                  "Gotta make you understand",
-                  "Chorus :)",
-                  "Never gonna give you up",
-                  "Never gonna let you down",
-                  "Never gonna run around and desert you",
-                  "Never gonna say goodbye",
-                  "Never gonna tell a lie and hurt you",
-                ]}
-              />
-            ),
-          },
-          {
-            path: "rotating",
-            element: <RepeatingBannerPage />,
-          },
-          {
-            path: "sand",
-            element: <AnimatedSandPage />,
-          },
-          {
-            path: "pong",
-            element: <PongPage />
-          },
-        ],
+        children: playgroundRoutes,
       },
     ],
   },
