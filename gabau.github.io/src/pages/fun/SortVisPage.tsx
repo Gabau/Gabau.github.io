@@ -9,7 +9,7 @@ interface SortingState {
 }
 
 class InsertionSortState implements SortingState {
-  i: number
+  i: number;
   currPos: number;
   middleOfLoop: boolean = false;
   key: number = 0;
@@ -23,8 +23,8 @@ class InsertionSortState implements SortingState {
     this.currPos = 0;
   }
   getNextStep(values: number[]): undefined | "finished" | number[] {
-    if (this.i >= values.length) return "finished";
-    if (values.length <= 1) return "finished"; 
+    if (this.i >= values.length && !this.middleOfLoop) return "finished";
+    if (values.length <= 1) return "finished";
     if (!this.middleOfLoop) {
       this.currPos = this.i - 1;
       this.key = values[this.i];
@@ -40,7 +40,6 @@ class InsertionSortState implements SortingState {
     }
     return values;
   }
-
 }
 
 // stores the states for partition sort
@@ -59,7 +58,6 @@ class PartitionSortState implements SortingState {
   }
 
   reset(values: number[]) {
-
     this.start = 0;
     this.end = values.length;
     this.frontPointer = 0;
@@ -154,8 +152,7 @@ export default function SortVisPage() {
         Math.floor(Math.random() * arraySize)
       )
     );
-
-  }, [arraySize])
+  }, [arraySize]);
   return (
     <CenteredDivLayout>
       <div className="flex flex-row bg-slate-500 dark:bg-slate-800">
@@ -212,31 +209,38 @@ export default function SortVisPage() {
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
 
-<label>Set the time in miliseconds </label>
+          <label>Set the time in miliseconds </label>
           <input
             type="number"
             max="1000"
             value={intervalTime}
-            onChange={(e) => setIntervalTime(e.target.value as unknown as number)}
+            onChange={(e) =>
+              setIntervalTime(e.target.value as unknown as number)
+            }
             className="rounded-lg bg-slate-200 dark:bg-slate-600 p-3 shadow my-5"
           />
           <input
             type="range"
             max="1000"
             value={intervalTime}
-            onChange={(e) => setIntervalTime(e.target.value as unknown as number)}
+            onChange={(e) =>
+              setIntervalTime(e.target.value as unknown as number)
+            }
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
           <label>Select the type of sort</label>
-          <select onChange={(e) => {
-            if (e.target.value === "Insertion") {
-              setSort(new InsertionSortState());
-            }
-            if (e.target.value === "Quick") {
-              setSort(new PartitionSortState());
-            }
-          }}
-          defaultValue={"Quick"}>
+          <select
+            className="bg-gray-200 dark:bg-slate-800 border border-slate-950 rounded-lg p-3 shadow dark:focus:border-none"
+            onChange={(e) => {
+              if (e.target.value === "Insertion") {
+                setSort(new InsertionSortState());
+              }
+              if (e.target.value === "Quick") {
+                setSort(new PartitionSortState());
+              }
+            }}
+            defaultValue={"Quick"}
+          >
             <option value="Quick">Quick Sort</option>
             <option value="Insertion">Insertion sort</option>
           </select>
