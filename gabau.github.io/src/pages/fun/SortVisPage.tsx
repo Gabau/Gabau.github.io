@@ -17,6 +17,14 @@ class PartitionSortState {
     this.end = 0;
   }
 
+  reset(values: number[]) {
+
+    this.start = 0;
+    this.end = values.length;
+    this.frontPointer = 0;
+    this.currPos = 1;
+  }
+
   swap(values: number[], i: number, j: number) {
     if (i >= values.length || j >= values.length) return;
     const tmp = values[i];
@@ -59,13 +67,6 @@ class PartitionSortState {
       this.start = this.frontPointer;
       this.partitions = this.partitions.slice(1);
     }
-
-    // if (values[this.frontPointer] > values[this.frontPointer + 1]) {
-    //   this.swap(values, this.frontPointer, this.frontPointer + 1);
-    //   this.frontPointer += 1;
-    //   this.currPos = Math.max(this.frontPointer + 1, this.currPos);
-    //   return values;
-    // }
     if (values[this.currPos] <= values[this.frontPointer]) {
       this.swap(values, this.currPos, this.frontPointer + 1);
       this.swap(values, this.frontPointer, this.frontPointer + 1);
@@ -91,10 +92,7 @@ export default function SortVisPage() {
 
   useEffect(() => {
     if (!startAnim) return;
-    partSort.start = 0;
-    partSort.end = values.length;
-    partSort.frontPointer = 0;
-    partSort.currPos = 1;
+    partSort.reset(values);
     const f = () => {
       if (!animating) return;
       const r = partSort.getNextStep(values);
