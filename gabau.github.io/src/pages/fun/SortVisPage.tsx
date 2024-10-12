@@ -2,13 +2,54 @@ import { useEffect, useState } from "react";
 import SortVisualizer from "../../components/games/SortVisualizer";
 import CenteredDivLayout from "../../components/layouts/CenteredDivLayout";
 
-// stores the states for partition sort
-class PartitionSortState {
-  partitions: { start: number; end: number }[];
+interface SortingState {
   currPos: number;
+  reset(values: number[]): void;
+  getNextStep(values: number[]): undefined | "finished" | number[];
+}
+
+class InsertionSortState implements SortingState {
+  i: number
+  currPos: number;
+  middleOfLoop: boolean = false;
+  key: number = 0;
+  constructor() {
+    this.i = 1;
+    this.currPos = 0;
+  }
+  reset(): void {
+    this.i = 1;
+    this.middleOfLoop = false;
+    this.currPos = 0;
+  }
+  getNextStep(values: number[]): undefined | "finished" | number[] {
+    if (this.i >= values.length) return "finished";
+    if (values.length <= 1) return "finished"; 
+    if (!this.middleOfLoop) {
+      this.currPos = this.i - 1;
+      this.key = values[this.i];
+      this.middleOfLoop = true;
+      this.i += 1;
+    }
+    if (this.currPos >= 0 && values[this.currPos] > this.key) {
+      values[this.currPos + 1] = values[this.currPos];
+      this.currPos -= 1;
+    } else {
+      values[this.currPos + 1] = this.key;
+      this.middleOfLoop = false;
+    }
+    return values;
+  }
+
+}
+
+// stores the states for partition sort
+class PartitionSortState implements SortingState {
+  partitions: { start: number; end: number }[];
   frontPointer: number;
   start: number;
   end: number;
+  currPos: number;
   constructor() {
     this.partitions = [];
     this.currPos = 0;
@@ -79,7 +120,7 @@ class PartitionSortState {
 
 export default function SortVisPage() {
   const [values, setValues] = useState<number[]>([4, 0]);
-  const [partSort] = useState(new PartitionSortState());
+  const [partSort, setSort] = useState<SortingState>(new PartitionSortState());
   const [startAnim, setStartAnim] = useState(false);
   const [currPosition, setCurrPosition] = useState(0);
   const [arraySize, setArraySize] = useState(40);
@@ -107,6 +148,14 @@ export default function SortVisPage() {
     return () => clearTimeout(t);
   }, [partSort, startAnim, values, animating, intervalTime]);
 
+  useEffect(() => {
+    setValues(
+      Array.from({ length: arraySize }, () =>
+        Math.floor(Math.random() * arraySize)
+      )
+    );
+
+  }, [arraySize])
   return (
     <CenteredDivLayout>
       <div className="flex flex-row bg-slate-500 dark:bg-slate-800">
@@ -178,6 +227,19 @@ export default function SortVisPage() {
             onChange={(e) => setIntervalTime(e.target.value as unknown as number)}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
+          <label>Select the type of sort</label>
+          <select onChange={(e) => {
+            if (e.target.value === "Insertion") {
+              setSort(new InsertionSortState());
+            }
+            if (e.target.value === "Quick") {
+              setSort(new PartitionSortState());
+            }
+          }}
+          defaultValue={"Quick"}>
+            <option value="Quick">Quick Sort</option>
+            <option value="Insertion">Insertion sort</option>
+          </select>
         </div>
         <SortVisualizer
           values={values}
