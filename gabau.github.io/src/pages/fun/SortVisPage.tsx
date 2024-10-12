@@ -209,7 +209,7 @@ export default function SortVisPage() {
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
 
-          <label>Set the time in miliseconds </label>
+          <label>Set the time between each step in miliseconds</label>
           <input
             type="number"
             max="1000"
