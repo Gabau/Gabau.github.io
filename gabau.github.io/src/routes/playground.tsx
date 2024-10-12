@@ -70,7 +70,7 @@ export const playgroundRoutes = [
     title: "Sort visualisation",
     description: "Simple sorting visualisation of quick sort. It is pure quick sort which makes it slow on sorted array",
     element: <SortVisPage />
-  }
+  },
 ];
 
 
