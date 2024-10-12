@@ -250,6 +250,7 @@ export default function SortVisPage() {
                 }
                 setAnimating(false);
               }}
+              disabled={!animating}
             >
               Stop Sorting
             </button>
