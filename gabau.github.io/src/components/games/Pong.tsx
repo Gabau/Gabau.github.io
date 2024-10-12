@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, SetStateAction } from "react";
 import { Stage, Graphics, Text } from "@pixi/react";
 import * as PIXI from "pixi.js";
 import ThemeContext from "../../context/ThemeContext";
@@ -36,7 +36,7 @@ const Pong: React.FC = () => {
   const [leftScore, setLeftScore] = useState<number>(0);
   const [rightScore, setRightScore] = useState<number>(0);
 
-  const setBallSpeed = (f: (v: number) => void) => {
+  const setBallSpeed = (f: SetStateAction<BallSpeedState>) => {
     // if it has been set recently
     if (recentlySetSpeed) return;
     setBallSpeedInner(f);
