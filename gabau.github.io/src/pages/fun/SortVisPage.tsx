@@ -28,7 +28,10 @@ class CountingSortState implements SortingState {
   getNextStep(values: number[]): undefined | "finished" | number[] {
     if (this.loggingState === "counting") {
       if (this.currPos < values.length) {
-        this.numMap.set(values[this.currPos], (this.numMap.get(values[this.currPos]) ?? 0) + 1);
+        this.numMap.set(
+          values[this.currPos],
+          (this.numMap.get(values[this.currPos]) ?? 0) + 1
+        );
         this.min_val = Math.min(values[this.currPos], this.min_val);
         this.max_val = Math.max(values[this.currPos], this.max_val);
         this.currPos += 1;
@@ -39,13 +42,16 @@ class CountingSortState implements SortingState {
       }
       return values;
     }
-    
+
     if (this.currPos >= values.length) {
       return "finished";
     }
 
-    while (!this.simulate_counting && (this.numMap.get(this.currItem) === undefined
-    || this.numMap.get(this.currItem) === 0)) {
+    while (
+      !this.simulate_counting &&
+      (this.numMap.get(this.currItem) === undefined ||
+        this.numMap.get(this.currItem) === 0)
+    ) {
       this.currItem += 1;
     }
     // perform the writing
@@ -58,7 +64,6 @@ class CountingSortState implements SortingState {
       this.currItem += 1;
     }
   }
-
 }
 
 class InsertionSortState implements SortingState {
@@ -181,6 +186,21 @@ export default function SortVisPage() {
   const [simulateCounting, setSimulateCounting] = useState(false);
   const [currAlgorithm, setCurrAlgorithm] = useState("Quick");
   const [currTimeout, setCurrTimeout] = useState<number | null>(null);
+  const [canvasWidth, setCanvasWidth] = useState<number>(800);
+
+  useEffect(() => {
+    function updateSize() {
+      if (document.body.clientWidth <= 1024) {
+        setCanvasWidth((document.body.clientWidth * 8) / 9);
+        return;
+      }
+      setCanvasWidth((document.body.clientWidth - 200) / 2);
+    }
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   useEffect(() => {
     setValues(Array.from({ length: 40 }, () => Math.floor(Math.random() * 40)));
   }, []);
@@ -188,7 +208,7 @@ export default function SortVisPage() {
     if (partSort instanceof CountingSortState) {
       (partSort as CountingSortState).simulate_counting = simulateCounting;
     }
-  }, [simulateCounting, partSort])
+  }, [simulateCounting, partSort]);
 
   useEffect(() => {
     if (!startAnim) return;
@@ -216,7 +236,7 @@ export default function SortVisPage() {
   }, [arraySize, maxVal]);
   return (
     <CenteredDivLayout>
-      <div className="flex flex-row bg-slate-500 dark:bg-slate-800">
+      <div className="flex flex-col sm:flex sm:flex-row bg-slate-500 dark:bg-slate-800">
         <div className="flex flex-col items-center w-full h-full flex-auto m-8 space-y-2">
           <div className="flex flex-row flex-wrap">
             <button
@@ -268,7 +288,7 @@ export default function SortVisPage() {
             max="1000"
             value={arraySize}
             onChange={(e) => setArraySize(e.target.value as unknown as number)}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            className="w-3/4 sm:w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
 
           <label>Set the time between each step in miliseconds</label>
@@ -288,7 +308,7 @@ export default function SortVisPage() {
             onChange={(e) =>
               setIntervalTime(e.target.value as unknown as number)
             }
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            className="w-3/4 sm:w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
           <label>Set the range of values</label>
           <input
@@ -296,9 +316,7 @@ export default function SortVisPage() {
             max="5000"
             min="5"
             value={maxVal}
-            onChange={(e) =>
-              setMaxVal(e.target.value as unknown as number)
-            }
+            onChange={(e) => setMaxVal(e.target.value as unknown as number)}
             className="rounded-lg bg-slate-200 dark:bg-slate-600 p-3 shadow my-5"
           />
           <input
@@ -306,10 +324,8 @@ export default function SortVisPage() {
             max="5000"
             min="5"
             value={maxVal}
-            onChange={(e) =>
-              setMaxVal(e.target.value as unknown as number)
-            }
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            onChange={(e) => setMaxVal(e.target.value as unknown as number)}
+            className="w-3/4 sm:w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
           <label>Select the type of sort</label>
           <select
@@ -332,23 +348,31 @@ export default function SortVisPage() {
             <option value="Insertion">Insertion Sort</option>
             <option value="Counting">Counting Sort</option>
           </select>
-          {currAlgorithm === "Counting" && <label className="inline-flex items-center cursor-pointer p-4">
-              <input type="Checkbox" className="sr-only peer" 
-              checked={simulateCounting}
-              onChange={(e) => {
-                setSimulateCounting(e.target.checked);
-
-              }}/>
+          {currAlgorithm === "Counting" && (
+            <label className="inline-flex items-center cursor-pointer p-4">
+              <input
+                type="Checkbox"
+                className="sr-only peer"
+                checked={simulateCounting}
+                onChange={(e) => {
+                  setSimulateCounting(e.target.checked);
+                }}
+              />
               <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-              <span className="ms-3 text-sm font-medium ">Simulate counting</span>
-            </label>}
+              <span className="ms-3 text-sm font-medium ">
+                Simulate counting
+              </span>
+            </label>
+          )}
         </div>
-        <SortVisualizer
-          values={values}
-          currentPosition={currPosition}
-          width={800}
-          height={800}
-        />
+        <CenteredDivLayout>
+          <SortVisualizer
+            values={values}
+            currentPosition={currPosition}
+            width={canvasWidth}
+            height={canvasWidth}
+          />
+        </CenteredDivLayout>
       </div>
     </CenteredDivLayout>
   );
