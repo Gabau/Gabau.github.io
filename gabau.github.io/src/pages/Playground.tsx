@@ -62,7 +62,7 @@ export default function PlayGround() {
     <>
       <TypeWriterHeader title="Playground" timeout={300} className="p-10" />
       <p>For the miscellaneous stuff</p>
-      <div className="flex flex-wrap flex-row h-full w-full justify-center">
+      <div className="flex flex-wrap flex-row h-auto w-full justify-center">
         {playgrounds.map((v) => {
           return (
             <PlayGroundCard
