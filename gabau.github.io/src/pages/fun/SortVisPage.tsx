@@ -269,6 +269,9 @@ class InsertionQuickSortHybrid extends ExtendedPartitionSortState {
       if (m !== "finished") return values;
       // force a reset
       this.currPos = this.end;
+      // should sort -> to skip ahead to selecting partitions
+      // then perform the swapping for that partition
+      this.state = "sorting";
     }
     return super.getNextStep(values);
   }
