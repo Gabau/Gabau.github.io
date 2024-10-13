@@ -140,7 +140,7 @@ class PartitionSortState implements SortingState {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  afterChangePartition(values: number[]) {
+  afterChangePartition(_values: number[]) {
 
   }
 
@@ -207,7 +207,7 @@ class ExtendedPartitionSortState extends PartitionSortState {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  afterChangePartition(values: number[]): void {
+  afterChangePartition(_values: number[]): void {
       this.state = "checkingSorted";
       this.sorted = true;
   }
@@ -240,7 +240,7 @@ class InsertionQuickSortHybrid extends PartitionSortState {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  afterChangePartition(values: number[]): void {
+  afterChangePartition(_values: number[]): void {
       this.initialised = false;
   }
 
