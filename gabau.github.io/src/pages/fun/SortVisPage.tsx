@@ -90,7 +90,7 @@ class InsertionSortState implements SortingState {
   }
 
   getNextStep(values: number[]): undefined | "finished" | number[] {
-    if (this.end !== undefined && this.i >= this.end) return "finished";
+    if (this.end !== undefined && this.i >= this.end && !this.middleOfLoop) return "finished";
     if (this.i >= values.length && !this.middleOfLoop) return "finished";
     if (values.length <= 1) return "finished";
     if (!this.middleOfLoop) {
