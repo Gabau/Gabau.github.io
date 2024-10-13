@@ -129,6 +129,16 @@ class PartitionSortState implements SortingState {
     values[j] = tmp;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  afterChangePartition(values: number[]) {
+
+  }
+
+  // test whether to add partitions
+  addPartitions() {
+    return true;
+  }
+
   getNextStep(values: number[]) {
     if (
       this.currPos >= this.end ||
@@ -136,14 +146,14 @@ class PartitionSortState implements SortingState {
       this.start >= this.end
     ) {
       // push the current partitions onto the stack
-      if (this.start < this.end) {
-        if (this.frontPointer !== this.end) {
+      if (this.start < this.end && this.addPartitions()) {
+        if (this.frontPointer < this.end) {
           this.partitions.push({
             start: this.start,
             end: this.frontPointer,
           });
         }
-        if (this.start !== this.frontPointer + 1) {
+        if (this.start < this.frontPointer + 1) {
           this.partitions.push({
             start: this.frontPointer + 1,
             end: this.end,
@@ -163,6 +173,8 @@ class PartitionSortState implements SortingState {
       this.end = this.partitions[0].end;
       this.start = this.frontPointer;
       this.partitions = this.partitions.slice(1);
+      this.afterChangePartition(values);
+      return values;
     }
     if (values[this.currPos] <= values[this.frontPointer]) {
       this.swap(values, this.currPos, this.frontPointer + 1);
@@ -174,12 +186,61 @@ class PartitionSortState implements SortingState {
   }
 }
 
+class ExtendedPartitionSortState extends PartitionSortState {
+  state: "checkingSorted" | "sorting" = "checkingSorted"
+  // indicater to show that the current partition has been sorted
+  sorted: boolean = false;
+  reset(values: number[]): void {
+      this.state = "checkingSorted";
+      this.start = 1;
+      super.reset(values);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  afterChangePartition(values: number[]): void {
+      this.state = "checkingSorted";
+      this.sorted = true;
+  }
+
+  // only add parititions when the partitions are not sorted
+  addPartitions(): boolean {
+    return !this.sorted;
+  }
+
+  getNextStep(values: number[]): number[] | "finished" {
+    if (this.state === "checkingSorted") {
+      if (this.currPos >= this.end ||
+        this.frontPointer >= this.end ||
+        this.start >= this.end) {
+        
+        // we have finished sorting this entire partition
+        this.state = "sorting";
+        this.sorted = true;
+        this.currPos = this.start + 1;
+        if (this.partitions.length === 0) return "finished";
+        return values;
+      } else if (values[this.currPos - 1] > values[this.currPos]) {
+        // need to sort partition
+        this.state = "sorting";
+        this.sorted = false;
+        this.currPos = this.start + 1;
+        return values;
+      }
+      this.currPos += 1;
+      return values;
+    }
+    return super.getNextStep(values);
+  }
+}
+
 export default function SortVisPage() {
   const [values, setValues] = useState<number[]>([4, 0]);
   const [partSort, setSort] = useState<SortingState>(new PartitionSortState());
+  // true only for interval + 200 ms after button has been clicked
   const [startAnim, setStartAnim] = useState(false);
   const [currPosition, setCurrPosition] = useState(0);
   const [arraySize, setArraySize] = useState(40);
+  // true from when the animation button is fired to when the animation ends
   const [animating, setAnimating] = useState(false);
   const [intervalTime, setIntervalTime] = useState(10);
   const [maxVal, setMaxVal] = useState(40);
@@ -211,7 +272,7 @@ export default function SortVisPage() {
   }, [simulateCounting, partSort]);
 
   useEffect(() => {
-    if (!startAnim) return;
+    if (!startAnim || !animating) return; 
     partSort.reset(values);
     setCurrCount(0);
     const f = () => {
@@ -246,7 +307,7 @@ export default function SortVisPage() {
                 if (animating) return;
                 setAnimating(true);
                 setStartAnim(true);
-                setTimeout(() => setStartAnim(false), 32);
+                setTimeout(() => setStartAnim(false), intervalTime + 500);
               }}
               className="bg-gray-200 hover:bg-gray-400 dark:hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
@@ -342,6 +403,9 @@ export default function SortVisPage() {
               if (e.target.value === "Counting") {
                 setSort(new CountingSortState());
               }
+              if (e.target.value === "QuickExt") {
+                setSort(new ExtendedPartitionSortState());
+              }
               setCurrAlgorithm(e.target.value);
             }}
             defaultValue={"Quick"}
@@ -349,6 +413,7 @@ export default function SortVisPage() {
             <option value="Quick">Quick Sort</option>
             <option value="Insertion">Insertion Sort</option>
             <option value="Counting">Counting Sort</option>
+            <option value="QuickExt">Extending Quick Sort</option>
           </select>
           {currAlgorithm === "Counting" && (
             <label className="inline-flex items-center cursor-pointer p-4">
