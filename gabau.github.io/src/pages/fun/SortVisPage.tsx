@@ -220,14 +220,14 @@ class ExtendedPartitionSortState extends PartitionSortState {
     if (this.state === "checkingSorted") {
       this.state = "sorting";
       if (this.frontPointer < this.end)
-      this.swap(values, this.frontPointer, Math.round(Math.random() * (this.end - 1 - this.start)) + this.start);
+      this.swap(values, this.frontPointer, Math.floor(Math.random() * (this.end - 1 - this.start)) + this.start);
       return values;
     }
     return super.getNextStep(values);
   }
 }
 
-class InsertionQuickSortHybrid extends PartitionSortState {
+class InsertionQuickSortHybrid extends ExtendedPartitionSortState {
   blockSize: number = 10;
   insertionSortState: InsertionSortState  = new InsertionSortState();
   initialised: boolean = false;
@@ -239,7 +239,8 @@ class InsertionQuickSortHybrid extends PartitionSortState {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  afterChangePartition(_values: number[]): void {
+  afterChangePartition(values: number[]): void {
+      super.afterChangePartition(values);
       this.initialised = false;
   }
 
@@ -289,6 +290,8 @@ export default function SortVisPage() {
   const [currTimeout, setCurrTimeout] = useState<number | null>(null);
   const [canvasWidth, setCanvasWidth] = useState<number>(800);
   const [currCount, setCurrCount] = useState(0);
+  const [startSortFast, setStartSortFast] = useState(false);
+
   useEffect(() => {
     function updateSize() {
       if (document.body.clientWidth <= 1024) {
@@ -310,6 +313,30 @@ export default function SortVisPage() {
       (partSort as CountingSortState).simulate_counting = simulateCounting;
     }
   }, [simulateCounting, partSort]);
+
+  useEffect(() => {
+    if (!startSortFast || !animating) return;
+    partSort.reset(values);
+    setCurrCount(0)
+    const f = async () => {
+      console.log("Ahh")
+      while (partSort.getNextStep(values) !== "finished") {
+        if (!animating) {
+          setStartSortFast(false);
+          return;
+        }
+        setCurrCount((v) => v+1);
+        setCurrPosition(partSort.currPos);
+      }
+      setValues(values.slice(0));
+      setAnimating(false);
+      
+      setStartSortFast(false);
+    }
+    const m = setTimeout(f, 40);
+    setCurrTimeout(m);
+    return () => clearTimeout(m)
+  }, [animating, partSort, startSortFast, values])
 
   useEffect(() => {
     if (!startAnim || !animating) return; 
@@ -350,9 +377,22 @@ export default function SortVisPage() {
                 setTimeout(() => setStartAnim(false), intervalTime + 500);
               }}
               className="bg-gray-200 hover:bg-gray-400 dark:hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              disabled={animating}
             >
               Start Animation
             </button>
+            <button
+              onClick={() => {
+                if (animating) return;
+                setAnimating(true);
+                setStartSortFast(true);
+              }}
+              className="bg-gray-200 hover:bg-gray-400 dark:hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              disabled={animating}
+            >
+              Start Animation Fast (Ignore interval)
+            </button>
+
             <button
               className="bg-gray-200 hover:bg-gray-400 dark:hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
               onClick={() => {
@@ -471,7 +511,7 @@ export default function SortVisPage() {
               />
               <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ms-3 text-sm font-medium ">
-                Simulate counting
+                Simulate counting. Large range can cause lag
               </span>
             </label>
           )}
