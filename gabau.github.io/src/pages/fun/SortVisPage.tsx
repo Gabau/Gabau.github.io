@@ -235,7 +235,7 @@ class InsertionQuickSortHybrid extends PartitionSortState {
 
   reset(v: number[]) {
     super.reset(v);
-    this.insertionSortState.reset(v);
+    this.insertionSortState.reset();
     this.initialised = false;
   }
 
@@ -417,7 +417,7 @@ export default function SortVisPage() {
           <label>Set the range of values</label>
           <input
             type="number"
-            max="5000"
+            max="2147483647"
             min="5"
             value={maxVal}
             onChange={(e) => setMaxVal(e.target.value as unknown as number)}
@@ -425,7 +425,7 @@ export default function SortVisPage() {
           />
           <input
             type="range"
-            max="5000"
+            max="2147483647"
             min="5"
             value={maxVal}
             onChange={(e) => setMaxVal(e.target.value as unknown as number)}
