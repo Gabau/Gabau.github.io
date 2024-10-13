@@ -71,6 +71,7 @@ class InsertionSortState implements SortingState {
   currPos: number;
   middleOfLoop: boolean = false;
   key: number = 0;
+  end: number | undefined = undefined;
   constructor() {
     this.i = 1;
     this.currPos = 0;
@@ -80,7 +81,16 @@ class InsertionSortState implements SortingState {
     this.middleOfLoop = false;
     this.currPos = 0;
   }
+
+  setScope(start: number, end: number) {
+    this.i = start;
+    this.currPos = start;
+    this.middleOfLoop = false;
+    this.end = end;
+  }
+
   getNextStep(values: number[]): undefined | "finished" | number[] {
+    if (this.end !== undefined && this.i >= this.end) return "finished";
     if (this.i >= values.length && !this.middleOfLoop) return "finished";
     if (values.length <= 1) return "finished";
     if (!this.middleOfLoop) {
@@ -139,7 +149,7 @@ class PartitionSortState implements SortingState {
     return true;
   }
 
-  getNextStep(values: number[]) {
+  getNextStep(values: number[]): number[] | undefined | "finished" {
     if (
       this.currPos >= this.end ||
       this.frontPointer >= this.end ||
@@ -207,12 +217,58 @@ class ExtendedPartitionSortState extends PartitionSortState {
     return true;
   }
 
-  getNextStep(values: number[]): number[] | "finished" {
+  getNextStep(values: number[]): number[] | "finished" | undefined {
     if (this.state === "checkingSorted") {
       this.state = "sorting";
       if (this.frontPointer < this.end)
       this.swap(values, this.frontPointer, Math.round(Math.random() * (this.end - 1 - this.start)) + this.start);
       return values;
+    }
+    return super.getNextStep(values);
+  }
+}
+
+class InsertionQuickSortHybrid extends PartitionSortState {
+  blockSize: number = 10;
+  insertionSortState: InsertionSortState  = new InsertionSortState();
+  initialised: boolean = false;
+
+  reset(v: number[]) {
+    super.reset(v);
+    this.insertionSortState.reset(v);
+    this.initialised = false;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  afterChangePartition(values: number[]): void {
+      this.initialised = false;
+  }
+
+  addPartitions(): boolean {
+    // only add partitions if the previous partition was not a insertion sort
+    return !this.initialised;
+  }
+
+  getNextStep(values: number[]): number[] | "finished" | undefined {
+    const sz = this.end - this.start;
+    if (sz < this.blockSize) {
+      if (!this.initialised) {
+        this.insertionSortState.setScope(this.start, this.end);
+        this.initialised = true;
+      }
+      
+      const m = this.insertionSortState.getNextStep(values);
+      this.currPos = this.insertionSortState.currPos;
+      
+      if (m !== "finished") {
+        return values;
+      }
+      if (m === "finished" && this.partitions.length === 0) {
+        return "finished";
+      }
+      if (m !== "finished") return values;
+      // force a reset
+      this.currPos = this.end;
     }
     return super.getNextStep(values);
   }
@@ -391,6 +447,9 @@ export default function SortVisPage() {
               if (e.target.value === "QuickExt") {
                 setSort(new ExtendedPartitionSortState());
               }
+              if (e.target.value === "InsQuick") {
+                setSort(new InsertionQuickSortHybrid());
+              }
               setCurrAlgorithm(e.target.value);
             }}
             defaultValue={"Quick"}
@@ -399,6 +458,7 @@ export default function SortVisPage() {
             <option value="Insertion">Insertion Sort</option>
             <option value="Counting">Counting Sort</option>
             <option value="QuickExt">Extending Quick Sort</option>
+            <option value="InsQuick">Insertion-Quick Hybrid Sort</option>
           </select>
           {currAlgorithm === "Counting" && (
             <label className="inline-flex items-center cursor-pointer p-4">
