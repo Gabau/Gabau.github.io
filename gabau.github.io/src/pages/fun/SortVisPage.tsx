@@ -204,29 +204,14 @@ class ExtendedPartitionSortState extends PartitionSortState {
 
   // only add parititions when the partitions are not sorted
   addPartitions(): boolean {
-    return !this.sorted;
+    return true;
   }
 
   getNextStep(values: number[]): number[] | "finished" {
     if (this.state === "checkingSorted") {
-      if (this.currPos >= this.end ||
-        this.frontPointer >= this.end ||
-        this.start >= this.end) {
-        
-        // we have finished sorting this entire partition
-        this.state = "sorting";
-        this.sorted = true;
-        this.currPos = this.start + 1;
-        if (this.partitions.length === 0) return "finished";
-        return values;
-      } else if (values[this.currPos - 1] > values[this.currPos]) {
-        // need to sort partition
-        this.state = "sorting";
-        this.sorted = false;
-        this.currPos = this.start + 1;
-        return values;
-      }
-      this.currPos += 1;
+      this.state = "sorting";
+      if (this.frontPointer < this.end)
+      this.swap(values, this.frontPointer, Math.round(Math.random() * (this.end - 1 - this.start)) + this.start);
       return values;
     }
     return super.getNextStep(values);
