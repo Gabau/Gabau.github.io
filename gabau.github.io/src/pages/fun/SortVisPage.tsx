@@ -83,8 +83,7 @@ class InsertionSortState implements SortingState {
   }
 
   setScope(start: number, end: number) {
-    this.i = start;
-    this.currPos = start;
+    this.i = start + 1;
     this.middleOfLoop = false;
     this.end = end;
   }
