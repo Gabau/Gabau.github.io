@@ -40,8 +40,8 @@ const SortVisualizer: React.FC<{
       min_val = Math.min(v, min_val);
     }
     const w = width / values.length;
-    
-    const gapWrapper = gap ? gap : 0.05 * w;
+    const ratio = values.length < 50 ? 0.05 : 0;
+    const gapWrapper = gap ? gap : ratio * w;
     for (let i = 0; i < values.length; ++i) {
       const perc = Math.round( (values[i] - min_val) / (max_val - min_val) * (height - m)) + m;
       g.beginFill(currColors.barColor);

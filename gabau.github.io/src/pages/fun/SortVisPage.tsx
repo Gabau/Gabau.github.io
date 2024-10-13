@@ -187,7 +187,7 @@ export default function SortVisPage() {
   const [currAlgorithm, setCurrAlgorithm] = useState("Quick");
   const [currTimeout, setCurrTimeout] = useState<number | null>(null);
   const [canvasWidth, setCanvasWidth] = useState<number>(800);
-
+  const [currCount, setCurrCount] = useState(0);
   useEffect(() => {
     function updateSize() {
       if (document.body.clientWidth <= 1024) {
@@ -213,9 +213,11 @@ export default function SortVisPage() {
   useEffect(() => {
     if (!startAnim) return;
     partSort.reset(values);
+    setCurrCount(0);
     const f = () => {
       if (!animating) return;
       const r = partSort.getNextStep(values);
+      setCurrCount(v => v+1);
       if (r === "finished") {
         setAnimating(false);
         return;
@@ -244,7 +246,7 @@ export default function SortVisPage() {
                 if (animating) return;
                 setAnimating(true);
                 setStartAnim(true);
-                setTimeout(() => setStartAnim(false), 1000);
+                setTimeout(() => setStartAnim(false), 32);
               }}
               className="bg-gray-200 hover:bg-gray-400 dark:hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
@@ -364,6 +366,10 @@ export default function SortVisPage() {
               </span>
             </label>
           )}
+          <label className="inline-flex items-center justify-center">
+            The number of steps taken:&nbsp;
+            {currCount}
+          </label>
         </div>
         <CenteredDivLayout>
           <SortVisualizer

@@ -14,7 +14,7 @@ const PlayGroundCard = ({
   return (
     <Link
       to={link ? link : "/playground"}
-      className="cursor-pointer m-5 sm:w-64 sm:h-64 w-96 h-96 rounded-md shadow-lg dark:bg-zinc-900 bg-slate-200 hover:dark:bg-black hover:bg-slate-100"
+      className="overflow-clip cursor-pointer m-5 sm:w-64 sm:h-64 w-96 h-96 rounded-md shadow-lg dark:bg-zinc-900 bg-slate-200 hover:dark:bg-black hover:bg-slate-100"
     >
       <div className="p-3">{title}</div>
       <br />
