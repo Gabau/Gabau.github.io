@@ -5,6 +5,7 @@ import APage from "../pages/fun/APage";
 import PongPage from "../pages/fun/PongPage";
 import RepeatingBannerPage from "../pages/fun/RepeatingBannerPage";
 import SortVisPage from "../pages/fun/SortVisPage";
+import SplitImageAnimationPage from "../pages/fun/SplitImageAnimationPage";
 
 export const playgroundRoutes = [
   {
@@ -71,6 +72,12 @@ export const playgroundRoutes = [
     description: "Simple sorting visualisation of quick sort. It is pure quick sort which makes it slow on sorted array",
     element: <SortVisPage />
   },
+  {
+    path: "split",
+    title: "Split image",
+    description: "Simple splt image",
+    element: <SplitImageAnimationPage />
+  }
 ];
 
 
